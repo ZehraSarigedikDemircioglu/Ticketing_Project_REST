@@ -39,7 +39,7 @@ public class ProjectDTO {
     private String projectDetail;
 
     private Status projectStatus;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY) // I want to see only when I retrieve this field, (not post)
     private int completeTaskCounts;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int unfinishedTaskCounts;
