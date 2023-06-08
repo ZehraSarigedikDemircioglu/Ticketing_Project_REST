@@ -36,7 +36,7 @@ public class ProjectController {
     @PutMapping
     public ResponseEntity<ResponseWrapper> updateProject(@RequestBody ProjectDTO projectDTO) {
         projectService.update(projectDTO);
-        return ResponseEntity.ok(new ResponseWrapper("Project is successfully updated", HttpStatus.OK));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("Project is successfully created",HttpStatus.CREATED));
     }
 
     @DeleteMapping("/{code}")
