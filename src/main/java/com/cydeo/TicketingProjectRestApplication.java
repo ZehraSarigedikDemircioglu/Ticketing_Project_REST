@@ -17,5 +17,4 @@ public class TicketingProjectRestApplication {
 
         return new ModelMapper();
     }
-
 }
