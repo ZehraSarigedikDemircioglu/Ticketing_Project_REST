@@ -110,7 +110,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<Project> list = projectRepository.findAllByAssignedManager(user);
 
-
         return list.stream().map(project -> {
 
                     ProjectDTO obj = projectMapper.convertToDto(project);
