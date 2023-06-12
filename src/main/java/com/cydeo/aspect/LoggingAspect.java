@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-//    Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+//    Logger logger = LoggerFactory.getLogger(LoggingAspect.class); = @Slf4j
 
     private String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
