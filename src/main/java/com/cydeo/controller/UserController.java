@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.annotation.ExecutionTime;
 import com.cydeo.dto.ResponseWrapper;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.exception.TicketingProjectException;
@@ -14,7 +15,7 @@ import javax.annotation.security.RolesAllowed;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@Tag(name = "UserController",description = "User API")
+@Tag(name = "UserController", description = "User API")
 public class UserController {
 
     private final UserService userService;
@@ -23,13 +24,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ExecutionTime
     @GetMapping()
-    @RolesAllowed({"Manager","Admin"})
+    @RolesAllowed({"Manager", "Admin"})
     @Operation(summary = "Get users")
     public ResponseEntity<ResponseWrapper> getUsers() {
         return ResponseEntity.ok(new ResponseWrapper("Users are successfully retrieved", userService.listAllUsers(), HttpStatus.OK));
     }
-
+    @ExecutionTime
     @GetMapping("/{username}")
     @RolesAllowed("Admin")
     @Operation(summary = "Get user by username")
