@@ -15,7 +15,7 @@ public class PerformanceAspect {
     @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
     public void executionTimePC() {}
 
-    @Around("executionTimePC()")
+    @Around("executionTimePC()") // @Around contains code which is executed before and after the matched method (JoinPoint)
     public Object aroundAnyExecutionTimeAdvice(ProceedingJoinPoint proceedingJoinPoint) {
 
         long beforeTime = System.currentTimeMillis();
@@ -23,7 +23,7 @@ public class PerformanceAspect {
         log.info("Execution starts:");
 
         try {
-            result = proceedingJoinPoint.proceed();
+            result = proceedingJoinPoint.proceed(); // calling proceed() on the ProceedingJoinPoint
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
