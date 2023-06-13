@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PerformanceAspect {
 
-    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
+    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)") // join points where the subject(method) of the join point
     public void executionTimePC() {}
 
     @Around("executionTimePC()") // @Around contains code which is executed before and after the matched method (JoinPoint)
