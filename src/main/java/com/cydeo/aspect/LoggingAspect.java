@@ -21,10 +21,13 @@ public class LoggingAspect {
         return userDetails.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 
-    @Pointcut("execution(* com.cydeo.controller.ProjectController.*(..)) || execution(* com.cydeo.controller.TaskController.*(..))") // * = any return type
+    @Pointcut("execution(* com.cydeo.controller.ProjectController.*(..)) || execution(* com.cydeo.controller.TaskController.*(..))")
+    // * = any return type
+    // we can combine pointcut expressions depend on business logic
     public void anyProjectAndTaskControllerPC() {}
 
     @Before("anyProjectAndTaskControllerPC()")
+    // @Before advice is executed before the method execution
     public void beforeAnyProjectAndTaskControllerAdvice(JoinPoint joinPoint) {
         log.info("Before -> Method: {}, User: {}"
         , joinPoint.getSignature().toShortString()
@@ -32,6 +35,7 @@ public class LoggingAspect {
     }
 
     @AfterReturning(pointcut = "anyProjectAndTaskControllerPC()", returning = "results")
+    // @AfterReturning advice gets invoked after a matched method finishes its execution and returns a value. The method should be executed successfully.
     public void afterReturningAnyProjectAndTaskControllerAdvice(JoinPoint joinPoint, Object results) {
         log.info("After Returning -> Method: {}, User: {}, Results: {}"
                 , joinPoint.getSignature().toShortString()
@@ -40,6 +44,7 @@ public class LoggingAspect {
     }
 
     @AfterThrowing(pointcut = "anyProjectAndTaskControllerPC()", throwing = "exception")
+    // @AfterThrowing advice gets invoked after the matched method finishes its execution by throwing an Exception
     public void afterReturningAnyProjectAndTaskControllerAdvice(JoinPoint joinPoint, Exception exception) {
         log.info("After Returning -> Method: {}, User: {}, Results: {}"
                 , joinPoint.getSignature().toShortString()
