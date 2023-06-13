@@ -21,7 +21,7 @@ public class LoggingAspect {
         return userDetails.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 
-    @Pointcut("execution(* com.cydeo.controller.ProjectController.*(..)) || execution(* com.cydeo.controller.TaskController.*(..))")
+    @Pointcut("execution(* com.cydeo.controller.ProjectController.*(..)) || execution(* com.cydeo.controller.TaskController.*(..))") // * = any return type
     public void anyProjectAndTaskControllerPC() {}
 
     @Before("anyProjectAndTaskControllerPC()")
