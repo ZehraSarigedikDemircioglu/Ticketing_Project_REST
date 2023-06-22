@@ -5,6 +5,10 @@ import com.cydeo.dto.RoleDTO;
 import com.cydeo.dto.UserDTO;
 import com.cydeo.enums.Gender;
 import com.cydeo.enums.Status;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +36,7 @@ class ProjectControllerTest {
     @BeforeAll
     static void setUp() {
 
-        token = "Bearer " + "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNQk90MlJoZUhaQi1TaGhnNGxPYVZ4MzdsWUhYU3NIYVlaVDdvLUxQN3NRIn0.eyJleHAiOjE2ODc0NTg2NjksImlhdCI6MTY4NzQ0MDY2OSwianRpIjoiYmViY2ZlNmUtYjFhZC00NTRhLTg3NzUtMDQzMGViOTMwZWIzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2N5ZGVvLWRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YWZmMjM0Ny05ZDc2LTQ3OTUtYWZmZi00YjY3OTU4NTE0OTMiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ0aWNrZXRpbmctYXBwIiwic2Vzc2lvbl9zdGF0ZSI6ImNhNzk1NDI4LTFjYTUtNDlkYS04M2QwLWVhZTRkMWQ4Yjc4NSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cDovL2xvY2FsaG9zdDo4MDgxIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtY3lkZW8tZGV2IiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJ0aWNrZXRpbmctYXBwIjp7InJvbGVzIjpbIk1hbmFnZXIiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiJjYTc5NTQyOC0xY2E1LTQ5ZGEtODNkMC1lYWU0ZDFkOGI3ODUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJlZmVycmVkX3VzZXJuYW1lIjoib3p6eSJ9.B53zj3OBMZwQrGaoi2-S4YjG87zw1oTTCE4HDuw0k0zfQV-xm3OTGMiELNlvsYJGIVKFc-l5l6GDUhNCeuudfwahbNZJxf0XC1X8Ld3bDf9yAPs-EyXexB7IeaEZUdqh7kUB3ttbvVZCfMm-eh7q2ca3KZ7aSpidVeQkOu_l9cH5s0qiHZLf1SLQzy88P5QViu4dj8AZIEHmakwj_Sfyy3ylYFD0KCNX3HlUawshVG_mY_olgQ1dTZGsOP0kUbIcTWg7MYg53GiWMZCAwudt2cN-Q0Rx86jVZM5qGdK7zRS5zwiDDR87xJT9L9BvbdmoRaLrzGGkY4GpqqgKkIZf0A";
+        token = "Bearer " + "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJNQk90MlJoZUhaQi1TaGhnNGxPYVZ4MzdsWUhYU3NIYVlaVDdvLUxQN3NRIn0.eyJleHAiOjE2ODc0NTk5MTcsImlhdCI6MTY4NzQ0MTkxNywianRpIjoiMTg3ZTg0ODEtNGU5Yy00OTRkLWI4ZjctYmNlMjRjMzljYjA2IiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2N5ZGVvLWRldiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI0YWZmMjM0Ny05ZDc2LTQ3OTUtYWZmZi00YjY3OTU4NTE0OTMiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ0aWNrZXRpbmctYXBwIiwic2Vzc2lvbl9zdGF0ZSI6ImM2ZDU1NDcwLWFjM2ItNDVjMi05YmM5LTUzZGFiZmUwOTgwNSIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cDovL2xvY2FsaG9zdDo4MDgxIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtY3lkZW8tZGV2IiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJ0aWNrZXRpbmctYXBwIjp7InJvbGVzIjpbIk1hbmFnZXIiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJzaWQiOiJjNmQ1NTQ3MC1hYzNiLTQ1YzItOWJjOS01M2RhYmZlMDk4MDUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJlZmVycmVkX3VzZXJuYW1lIjoib3p6eSJ9.KkQx83uy4M51C15U20UJ7R2pulvg9rHaXvYH97WkmJ9Bt20b_JfK0xShdEiS5AQrOkWgN5WzvXiUdteGb0QVtD1f0XtAk944hALi-GkSDh5kfxpnrgAAgFjgEVoeveaxpT6-PoxPejs0PRNxBW3OU-8u8jy7u8O4GjuSGZe06IAweKFhiBjpf8GVLW7K3u0OhW159PiS9h5XHbbFobh_Cqucqi5B_qmschYVnD4nK1rcRL0fnvTBACXN-ZmWsQwRBCp3jBrpHlq7BmVV-eUzgHgZF_SGt9cip9s--ManeypEAzA69LrLwLMa1M6ZgVbS4_7JoAYSC7q0jGbl10Anaw";
 
         manager = new UserDTO(2L,
                 "",
@@ -72,6 +76,39 @@ class ProjectControllerTest {
                 .andExpect(jsonPath("$.data[0].assignedManager.userName").isNotEmpty())
                 .andExpect(jsonPath("$.data[0].assignedManager.userName").isString())
                 .andExpect(jsonPath("$.data[0].assignedManager.userName").value("ozzy"));
+    }
+    @Test
+    void givenToken_createProject() throws Exception {
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/project")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Project is successfully created"));
+
+    }
+    @Test
+    void givenToken_updateProject() throws Exception {
+
+        project.setProjectName("API Project-2");
+
+        mvc.perform(MockMvcRequestBuilders.put("/api/v1/project")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Project is successfully updated"));
+
+    }
+
+    private String toJsonString(final Object obj) throws JsonProcessingException { // google like JsonToString depend on needs
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.registerModule(new JavaTimeModule()); // 2023, 06, 22 -> 2023/06/23 type format changed
+        return objectMapper.writeValueAsString(obj);
     }
 
 }
