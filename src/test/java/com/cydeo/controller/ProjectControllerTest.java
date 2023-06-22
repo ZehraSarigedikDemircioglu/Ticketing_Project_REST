@@ -87,7 +87,6 @@ class ProjectControllerTest {
                         .content(toJsonString(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Project is successfully created"));
-
     }
     @Test
     void givenToken_updateProject() throws Exception {
@@ -99,9 +98,8 @@ class ProjectControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(toJsonString(project)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("Project is successfully updated"));
-
     }
 
     private String toJsonString(final Object obj) throws JsonProcessingException { // google like JsonToString depend on needs
