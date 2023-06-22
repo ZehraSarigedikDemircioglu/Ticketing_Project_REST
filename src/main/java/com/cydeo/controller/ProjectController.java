@@ -52,6 +52,7 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper("Project is successfully updated", HttpStatus.CREATED));
     }
 
+
     @DeleteMapping("/{code}")
     @RolesAllowed("Manager")
     @Operation(summary = "Delete project")
