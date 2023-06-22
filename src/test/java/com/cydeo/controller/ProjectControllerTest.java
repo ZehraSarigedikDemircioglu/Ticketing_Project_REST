@@ -41,6 +41,7 @@ class ProjectControllerTest {
     static void setUp() {
 
         token = "Bearer " + getToken();
+        // token = "Bearer " + "Hard-coded token no";
 
         manager = new UserDTO(2L,
                 "",
