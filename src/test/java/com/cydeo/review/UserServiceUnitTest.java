@@ -145,6 +145,6 @@ public class UserServiceUnitTest {
         when(userRepository.save(user)).thenReturn(user);
         UserDTO actualDTO = userService.save(userDTO);
         assertThat(actualDTO).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(userDTO);
-        verify(keycloakService, atLeast(1)).userCreate(any());
+        verify(keycloakService, atLeast(1)).userCreate(any()); // if we want to check this method used.
     }
 }
